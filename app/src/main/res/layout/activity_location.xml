@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    tools:context=".Task2.LocationActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location Tracker"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/locate_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Locate Me"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location will appear here"
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:background="#f0f0f0"/>
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Location"
+        android:enabled="false"/>
+    <Button
+        android:layout_margin="10dp"
+        android:id="@+id/alertButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Location"
+        android:enabled="false"/>
+
+</LinearLayout>
