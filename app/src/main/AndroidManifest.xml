@@ -24,9 +24,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyContacts"
         tools:targetApi="31">
+
+        <activity android:name=".Task2.AccidentActivity"
+            android:exported="true"/>
+        <activity android:name=".Task2.FireSafetyActivity"
+            android:exported="true"/>
+        <activity android:name=".Task2.HealthCareActivity"
+            android:exported="true"/>
+        <activity android:name=".Task2.PoliceActivity"
+            android:exported="true"/>
+        <activity android:name=".Task2.SOSActivity"
+            android:exported="true"/>
         <activity
             android:name=".Task2.LocationActivity"
             android:exported="true" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".Task2.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

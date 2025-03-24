@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.chari6268.mycontacts.R;
 
+import com.chari6268.mycontacts.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,22 +26,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-public class LocationActivity extends AppCompatActivity {
-
+public class SOSActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static final int REQUEST_CHECK_SETTINGS = 1002;
     private static final long UPDATE_INTERVAL = 10000; // 10 seconds
@@ -50,78 +37,41 @@ public class LocationActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-    private Button locateButton, saveButton, alarmButton;
     private TextView locationTextView;
     private Location currentLocation;
+    Button sendSmsButton;
     private static final int SMS_PERMISSION_CODE = 101;
     String message = "";
     String[] userPhoneNumbers = {
-            "9440226858",
-            "9391954213",
-            "9866684845",
-            "8019735081"
+            "8332856510",
+            "9866684845"
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
+        setContentView(R.layout.activity_sos);
         initialization();
-        saveButton.setEnabled(false);
-
-        locateButton.setOnClickListener(v -> checkLocationSettingsAndProceed());
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    Toast.makeText(LocationActivity.this, "Could not get location", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Location location = locationResult.getLastLocation();
-                currentLocation = location;
-                String locationText = "Latitude: " + location.getLatitude() +
-                        "\nLongitude: " + location.getLongitude();
-                message = locationText;
-                locationTextView.setText(locationText);
-                saveButton.setEnabled(true);
-                alarmButton.setEnabled(true);
-                fusedLocationClient.removeLocationUpdates(locationCallback);
-            }
-        };
-
-        alarmButton.setOnClickListener(view -> {
-            if (ContextCompat.checkSelfPermission(LocationActivity.this, Manifest.permission.SEND_SMS)
-                    == PackageManager.PERMISSION_GRANTED) {
-                for(int i =0;i<userPhoneNumbers.length;i++){
-                    sendSms(userPhoneNumbers[i], "There is an Emergency \n Iam at This Location \n"+message);  // Replace with the correct number and message
-                }
-            } else {
-                // Request permission if not granted
-                ActivityCompat.requestPermissions(LocationActivity.this,
-                        new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
-            }
-        });
     }
+    private void sendSms(String phoneNumber, String message) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();  // Get the default SmsManager instance
 
-private void sendSms(String phoneNumber, String message) {
-    try {
-        SmsManager smsManager = SmsManager.getDefault();  // Get the default SmsManager instance
+            // If the currentLocation is available, include the Google Maps link
+            if (currentLocation != null) {
+                double latitude = currentLocation.getLatitude();
+                double longitude = currentLocation.getLongitude();
+                String mapLink = "https://www.google.com/maps?q=" + latitude + "," + longitude;
 
-        // If the currentLocation is available, include the Google Maps link
-        if (currentLocation != null) {
-            double latitude = currentLocation.getLatitude();
-            double longitude = currentLocation.getLongitude();
-            String mapLink = "https://www.google.com/maps?q=" + latitude + "," + longitude;
-
-            // Append the Google Maps link to the message
-            message += "\n" + mapLink;
+                // Append the Google Maps link to the message
+                message += "\n" + mapLink;
+            }
+            // Send the SMS
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error sending SMS: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        // Send the SMS
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-        Toast.makeText(this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
-    } catch (Exception e) {
-        Toast.makeText(this, "Error sending SMS: " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
-}
 
 
     @Override
@@ -151,10 +101,35 @@ private void sendSms(String phoneNumber, String message) {
     private void initialization() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        locationTextView = findViewById(R.id.location_text);
-        locateButton = findViewById(R.id.locate_button);
-        saveButton = findViewById(R.id.save_button);
-        alarmButton = findViewById(R.id.alertButton);
+        sendSmsButton = findViewById(R.id.sentPolice);
+        sendSmsButton.setOnClickListener(v -> {
+            checkLocationSettingsAndProceed();
+        });
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    Toast.makeText(SOSActivity.this, "Could not get location", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Location location = locationResult.getLastLocation();
+                currentLocation = location;
+                String locationText = "Latitude: " + location.getLatitude() +
+                        "\nLongitude: " + location.getLongitude();
+                message = locationText;
+                if (ContextCompat.checkSelfPermission(SOSActivity.this, Manifest.permission.SEND_SMS)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    for(int i =0;i<userPhoneNumbers.length;i++){
+                        sendSms(userPhoneNumbers[i], "There is an Emergency \n Iam at This Location \n"+message);  // Replace with the correct number and message
+                    }
+                } else {
+                    // Request permission if not granted
+                    ActivityCompat.requestPermissions(SOSActivity.this,
+                            new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
+                }
+                fusedLocationClient.removeLocationUpdates(locationCallback);
+            }
+        };
     }
 
     private void checkLocationSettingsAndProceed() {
@@ -174,12 +149,12 @@ private void sendSms(String phoneNumber, String message) {
                     if (statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
                         try {
                             ResolvableApiException resolvable = (ResolvableApiException) e;
-                            resolvable.startResolutionForResult(LocationActivity.this, REQUEST_CHECK_SETTINGS);
+                            resolvable.startResolutionForResult(SOSActivity.this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException sendEx) {
-                            Toast.makeText(LocationActivity.this, "Error opening location settings dialog", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SOSActivity.this, "Error opening location settings dialog", Toast.LENGTH_SHORT).show();
                         }
                     } else if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
-                        Toast.makeText(LocationActivity.this, "Unable to turn on location. Please enable location in settings.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SOSActivity.this, "Unable to turn on location. Please enable location in settings.", Toast.LENGTH_LONG).show();
                     }
                 });
     }

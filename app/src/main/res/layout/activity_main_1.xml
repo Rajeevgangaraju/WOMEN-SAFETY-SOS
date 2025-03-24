@@ -1,0 +1,63 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Emergency Assistance"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="24dp" />
+
+        <Button
+            android:id="@+id/healthcare_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Health Care" />
+
+        <Button
+            android:id="@+id/firesafety_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fire  Safety"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/accident_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Accident"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/police_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Police"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/sos_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SOS - Press for 3 sec"
+            android:backgroundTint="#FF0000"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="24dp" />
+
+        <Button
+            android:id="@+id/location_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Track Location"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
